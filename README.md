@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="es">
 <head>
 
@@ -21,13 +20,11 @@ margin:0;
 }
 
 .login-box{
-
 width:350px;
 padding:30px;
 border:2px solid #00ff88;
 border-radius:15px;
 box-shadow:0 0 25px #00ff88;
-
 }
 
 h1{
@@ -36,7 +33,6 @@ margin-bottom:30px;
 }
 
 input{
-
 width:100%;
 padding:12px;
 margin-bottom:15px;
@@ -44,11 +40,9 @@ background:black;
 border:1px solid #00ff88;
 color:#00ff88;
 font-size:16px;
-
 }
 
 button{
-
 width:100%;
 padding:12px;
 background:black;
@@ -56,22 +50,17 @@ border:2px solid #00ff88;
 color:#00ff88;
 font-size:18px;
 cursor:pointer;
-
 }
 
 button:hover{
-
 background:#00ff88;
 color:black;
-
 }
 
 #error{
-
 margin-top:15px;
 color:red;
 text-align:center;
-
 }
 
 </style>
@@ -133,15 +122,17 @@ email,
 password
 );
 
-// CAMBIA ESTA URL POR TU PANEL
+// REDIRECCION AL PANEL
 
 window.location.href =
-"https://TUUSUARIO.github.io/TUREPO/panel.html";
+"https://sebxrmods.github.io/p/";
 
 }catch(err){
 
 document.getElementById("error").innerHTML =
 "Correo o contraseña incorrectos";
+
+console.log(err);
 
 }
 
