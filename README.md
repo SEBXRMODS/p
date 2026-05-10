@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
 
@@ -132,7 +133,10 @@ email,
 password
 );
 
-window.location.href = "panel.html";
+// CAMBIA ESTA URL POR TU PANEL
+
+window.location.href =
+"https://TUUSUARIO.github.io/TUREPO/panel.html";
 
 }catch(err){
 
