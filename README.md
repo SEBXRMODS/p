@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Login Admin</title>
+<title>Panel de Visitas</title>
 
 <style>
 
@@ -12,24 +12,39 @@ body{
 background:black;
 color:#00ff88;
 font-family:Consolas;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
-}
-
-.login-box{
-width:350px;
-padding:30px;
-border:2px solid #00ff88;
-border-radius:15px;
-box-shadow:0 0 25px #00ff88;
+padding:20px;
 }
 
 h1{
 text-align:center;
-margin-bottom:30px;
+font-size:40px;
+text-shadow:0 0 15px #00ff88;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th,td{
+border:1px solid #00ff88;
+padding:10px;
+text-align:center;
+}
+
+tr:hover{
+background:#001a11;
+}
+
+.login{
+max-width:400px;
+margin:auto;
+border:2px solid #00ff88;
+padding:25px;
+border-radius:15px;
+box-shadow:0 0 20px #00ff88;
+margin-top:100px;
 }
 
 input{
@@ -58,9 +73,13 @@ color:black;
 }
 
 #error{
-margin-top:15px;
 color:red;
 text-align:center;
+margin-top:10px;
+}
+
+#panel{
+display:none;
 }
 
 </style>
@@ -68,7 +87,9 @@ text-align:center;
 </head>
 <body>
 
-<div class="login-box">
+<!-- LOGIN -->
+
+<div class="login" id="loginBox">
 
 <h1>LOGIN ADMIN</h1>
 
@@ -82,14 +103,47 @@ text-align:center;
 
 </div>
 
+<!-- PANEL -->
+
+<div id="panel">
+
+<h1>PANEL DE VISITAS</h1>
+
+<table>
+
+<thead>
+
+<tr>
+<th>IP</th>
+<th>País</th>
+<th>Ciudad</th>
+<th>Dispositivo</th>
+<th>Hora</th>
+</tr>
+
+</thead>
+
+<tbody id="tabla"></tbody>
+
+</table>
+
+</div>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
 getAuth,
-signInWithEmailAndPassword
+signInWithEmailAndPassword,
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+getFirestore,
+collection,
+getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
 
@@ -105,6 +159,10 @@ appId: "1:1080144262727:web:3f42a97c334adb826b2362"
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+// LOGIN
 
 window.login = async function(){
 
@@ -122,19 +180,62 @@ email,
 password
 );
 
-// REDIRECCION AL PANEL
-
-window.location.href =
-"https://sebxrmods.github.io/p/";
-
 }catch(err){
 
 document.getElementById("error").innerHTML =
 "Correo o contraseña incorrectos";
 
-console.log(err);
+}
 
 }
+
+// VERIFICAR LOGIN
+
+onAuthStateChanged(auth, (user)=>{
+
+if(user){
+
+document.getElementById("loginBox").style.display =
+"none";
+
+document.getElementById("panel").style.display =
+"block";
+
+cargarVisitas();
+
+}
+
+});
+
+// CARGAR VISITAS
+
+async function cargarVisitas(){
+
+const querySnapshot =
+await getDocs(collection(db,"visitas"));
+
+let html = "";
+
+querySnapshot.forEach((doc)=>{
+
+const d = doc.data();
+
+html += `
+
+<tr>
+<td>${d.ip}</td>
+<td>${d.pais}</td>
+<td>${d.ciudad}</td>
+<td>${d.device}</td>
+<td>${d.hora}</td>
+</tr>
+
+`;
+
+});
+
+document.getElementById("tabla").innerHTML =
+html;
 
 }
 
