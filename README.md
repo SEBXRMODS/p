@@ -4,32 +4,73 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Panel Secreto</title>
+<title>Login Admin</title>
 
 <style>
 
 body{
-background:#000;
+background:black;
 color:#00ff88;
 font-family:Consolas;
-padding:20px;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.login-box{
+
+width:350px;
+padding:30px;
+border:2px solid #00ff88;
+border-radius:15px;
+box-shadow:0 0 25px #00ff88;
+
 }
 
 h1{
 text-align:center;
-text-shadow:0 0 15px #00ff88;
+margin-bottom:30px;
 }
 
-table{
+input{
+
 width:100%;
-border-collapse:collapse;
-margin-top:20px;
+padding:12px;
+margin-bottom:15px;
+background:black;
+border:1px solid #00ff88;
+color:#00ff88;
+font-size:16px;
+
 }
 
-th,td{
-border:1px solid #00ff88;
-padding:10px;
+button{
+
+width:100%;
+padding:12px;
+background:black;
+border:2px solid #00ff88;
+color:#00ff88;
+font-size:18px;
+cursor:pointer;
+
+}
+
+button:hover{
+
+background:#00ff88;
+color:black;
+
+}
+
+#error{
+
+margin-top:15px;
+color:red;
 text-align:center;
+
 }
 
 </style>
@@ -37,35 +78,28 @@ text-align:center;
 </head>
 <body>
 
-<h1>PANEL DE VISITAS</h1>
+<div class="login-box">
 
-<table>
+<h1>LOGIN ADMIN</h1>
 
-<thead>
+<input type="email" id="email" placeholder="Correo">
 
-<tr>
-<th>IP</th>
-<th>País</th>
-<th>Ciudad</th>
-<th>Dispositivo</th>
-<th>Hora</th>
-</tr>
+<input type="password" id="password" placeholder="Contraseña">
 
-</thead>
+<button onclick="login()">ENTRAR</button>
 
-<tbody id="tabla"></tbody>
+<p id="error"></p>
 
-</table>
+</div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-getFirestore,
-collection,
-getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+getAuth,
+signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
 
@@ -80,36 +114,34 @@ appId: "1:1080144262727:web:3f42a97c334adb826b2362"
 
 const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
+const auth = getAuth(app);
 
-async function cargar(){
+window.login = async function(){
 
-const querySnapshot =
-await getDocs(collection(db,"visitas"));
+const email =
+document.getElementById("email").value;
 
-let html = "";
+const password =
+document.getElementById("password").value;
 
-querySnapshot.forEach((doc)=>{
+try{
 
-const d = doc.data();
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
 
-html += `
-<tr>
-<td>${d.ip}</td>
-<td>${d.pais}</td>
-<td>${d.ciudad}</td>
-<td>${d.device}</td>
-<td>${d.hora}</td>
-</tr>
-`;
+window.location.href = "panel.html";
 
-});
+}catch(err){
 
-document.getElementById("tabla").innerHTML = html;
+document.getElementById("error").innerHTML =
+"Correo o contraseña incorrectos";
 
 }
 
-cargar();
+}
 
 </script>
 
